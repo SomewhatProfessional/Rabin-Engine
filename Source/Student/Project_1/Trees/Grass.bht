@@ -1,0 +1,5 @@
+TREENAME(Grass)
+TREENODE(C_Selector, 0)
+TREENODE(D_InvertedRepeater, 1)
+TREENODE(L_CheckIfEaten, 2)
+TREENODE(L_Idle, 1)

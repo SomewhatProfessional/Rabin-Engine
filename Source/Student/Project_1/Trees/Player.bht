@@ -1,0 +1,7 @@
+TREENAME(Player)
+TREENODE(C_Selector, 0)
+TREENODE(D_InvertedRepeater, 1)
+TREENODE(L_CheckMouseClick, 2)
+TREENODE(C_ParallelSequencer, 1)
+TREENODE(L_MoveToMouseClick, 2)
+TREENODE(L_PlaySound, 2)

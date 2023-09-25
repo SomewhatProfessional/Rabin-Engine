@@ -122,6 +122,12 @@ void Agent::set_scaling(float scalar)
     isDirty = true;
 }
 
+void Agent::set_specific_scaling(Vec3 scalar)
+{
+   scaling = scalar;
+   isDirty = true;
+}
+
 void Agent::set_pitch(float angleRadians)
 {
     eulerAngles.x = angleRadians;

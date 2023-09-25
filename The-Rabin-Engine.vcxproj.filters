@@ -322,6 +322,15 @@
     <ClInclude Include="Source\Framework\Core\AudioManager.h">
       <Filter>Source\Framework\Core</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Student\Project_1\Leaf\L_CheckIfEaten.h">
+      <Filter>Source\Student\Project_1\Leaf</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Student\Project_1\Leaf\L_CheckIfNearGrass.h">
+      <Filter>Source\Student\Project_1\Leaf</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Student\Project_1\Leaf\L_EatNearestGrass.h">
+      <Filter>Source\Student\Project_1\Leaf</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Framework\Main.cpp">
@@ -545,6 +554,15 @@
     </ClCompile>
     <ClCompile Include="Source\Framework\Core\AudioManager.cpp">
       <Filter>Source\Framework\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Student\Project_1\Leaf\L_CheckIfEaten.cpp">
+      <Filter>Source\Student\Project_1\Leaf</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Student\Project_1\Leaf\L_CheckIfNearGrass.cpp">
+      <Filter>Source\Student\Project_1\Leaf</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Student\Project_1\Leaf\L_EatNearestGrass.cpp">
+      <Filter>Source\Student\Project_1\Leaf</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

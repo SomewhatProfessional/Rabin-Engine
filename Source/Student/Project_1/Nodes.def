@@ -13,3 +13,7 @@ REGISTER_LEAF(L_MoveToFurthestAgent, "L_MoveToFurthestAgent")
 REGISTER_LEAF(L_MoveToMouseClick, "L_MoveToMouseClick")
 REGISTER_LEAF(L_MoveToRandomPosition, "L_MoveToRandomPosition")
 REGISTER_LEAF(L_PlaySound, "L_PlaySound")
+
+REGISTER_LEAF(L_CheckIfEaten, "Condition: Checks if this plant has just been eaten by an animal.")
+REGISTER_LEAF(L_CheckIfNearGrass, "Condition: Checks if this animal is close to a grass agent.")
+REGISTER_LEAF(L_EatNearestGrass, "Condition: Walks to the nearest grass agent and eats it.")

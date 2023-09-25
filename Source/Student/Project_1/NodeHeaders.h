@@ -18,7 +18,6 @@
 
 // Student Decorator Nodes
 
-
 // Example Leaf Nodes
 #include "Leaf/L_CheckMouseClick.h"
 #include "Leaf/L_Idle.h"
@@ -28,3 +27,6 @@
 #include "Leaf/L_PlaySound.h"
 
 // Student Leaf Nodes
+#include "Leaf/L_CheckIfEaten.h"
+#include "Leaf/L_CheckIfNearGrass.h"
+#include "Leaf/L_EatNearestGrass.h"

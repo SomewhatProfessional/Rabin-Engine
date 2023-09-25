@@ -50,6 +50,7 @@ public:
     void set_position(const Vec3 &pos);
     void set_scaling(const Vec3 &scale);
     void set_scaling(float scalar);
+    void set_specific_scaling(Vec3 scalar);
 
     void set_pitch(float angleRadians);
     void set_yaw(float angleRadians);

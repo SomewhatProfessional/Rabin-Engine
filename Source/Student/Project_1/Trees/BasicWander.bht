@@ -1,0 +1,6 @@
+TREENAME(BasicWander)
+TREENODE(C_Selector, 0)
+TREENODE(C_Sequencer, 1)
+TREENODE(L_MoveToRandomPosition, 2)
+TREENODE(L_Idle, 2)
+TREENODE(L_PlaySound, 1)
