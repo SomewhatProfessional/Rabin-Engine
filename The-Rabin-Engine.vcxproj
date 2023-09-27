@@ -256,6 +256,9 @@
     <ClInclude Include="Source\Student\Project_1\Decorator\D_InvertedRepeater.h" />
     <ClInclude Include="Source\Student\Project_1\Decorator\D_IsBeingChased.h" />
     <ClInclude Include="Source\Student\Project_1\Decorator\D_RepeatFourTimes.h" />
+    <ClInclude Include="Source\Student\Project_1\Leaf\L_AimAtTarget.h" />
+    <ClInclude Include="Source\Student\Project_1\Leaf\L_CheckForCollision.h" />
+    <ClInclude Include="Source\Student\Project_1\Leaf\L_CheckForTarget.h" />
     <ClInclude Include="Source\Student\Project_1\Leaf\L_CheckIfNearDeer.h" />
     <ClInclude Include="Source\Student\Project_1\Leaf\L_CheckIfNearGrass.h" />
     <ClInclude Include="Source\Student\Project_1\Leaf\L_CheckMouseClick.h" />
@@ -264,12 +267,14 @@
     <ClInclude Include="Source\Student\Project_1\Leaf\L_FindMouse.h" />
     <ClInclude Include="Source\Student\Project_1\Leaf\L_Flee.h" />
     <ClInclude Include="Source\Student\Project_1\Leaf\L_Idle.h" />
+    <ClInclude Include="Source\Student\Project_1\Leaf\L_LeadTarget.h" />
     <ClInclude Include="Source\Student\Project_1\Leaf\L_MoveForward.h" />
     <ClInclude Include="Source\Student\Project_1\Leaf\L_MoveToFurthestAgent.h" />
     <ClInclude Include="Source\Student\Project_1\Leaf\L_MoveToMouseClick.h" />
     <ClInclude Include="Source\Student\Project_1\Leaf\L_MoveToRandomPosition.h" />
     <ClInclude Include="Source\Student\Project_1\Leaf\L_PlaySound.h" />
     <ClInclude Include="Source\Student\Project_1\Leaf\L_RotateToMouse.h" />
+    <ClInclude Include="Source\Student\Project_1\Leaf\L_Shoot.h" />
     <ClInclude Include="Source\Student\Project_1\NodeHeaders.h" />
     <ClInclude Include="Source\Student\Project_2\P2_Pathfinding.h" />
   </ItemGroup>
@@ -345,6 +350,9 @@
     <ClCompile Include="Source\Student\Project_1\Decorator\D_InvertedRepeater.cpp" />
     <ClCompile Include="Source\Student\Project_1\Decorator\D_IsBeingChased.cpp" />
     <ClCompile Include="Source\Student\Project_1\Decorator\D_RepeatFourTimes.cpp" />
+    <ClCompile Include="Source\Student\Project_1\Leaf\L_AimAtTarget.cpp" />
+    <ClCompile Include="Source\Student\Project_1\Leaf\L_CheckForCollision.cpp" />
+    <ClCompile Include="Source\Student\Project_1\Leaf\L_CheckForTarget.cpp" />
     <ClCompile Include="Source\Student\Project_1\Leaf\L_CheckIfNearDeer.cpp" />
     <ClCompile Include="Source\Student\Project_1\Leaf\L_CheckIfNearGrass.cpp" />
     <ClCompile Include="Source\Student\Project_1\Leaf\L_CheckMouseClick.cpp" />
@@ -353,12 +361,14 @@
     <ClCompile Include="Source\Student\Project_1\Leaf\L_FindMouse.cpp" />
     <ClCompile Include="Source\Student\Project_1\Leaf\L_Flee.cpp" />
     <ClCompile Include="Source\Student\Project_1\Leaf\L_Idle.cpp" />
+    <ClCompile Include="Source\Student\Project_1\Leaf\L_LeadTarget.cpp" />
     <ClCompile Include="Source\Student\Project_1\Leaf\L_MoveForward.cpp" />
     <ClCompile Include="Source\Student\Project_1\Leaf\L_MoveToFurthestAgent.cpp" />
     <ClCompile Include="Source\Student\Project_1\Leaf\L_MoveToMouseClick.cpp" />
     <ClCompile Include="Source\Student\Project_1\Leaf\L_MoveToRandomPosition.cpp" />
     <ClCompile Include="Source\Student\Project_1\Leaf\L_PlaySound.cpp" />
     <ClCompile Include="Source\Student\Project_1\Leaf\L_RotateToMouse.cpp" />
+    <ClCompile Include="Source\Student\Project_1\Leaf\L_Shoot.cpp" />
     <ClCompile Include="Source\Student\Project_1\Setup.cpp" />
     <ClCompile Include="Source\Student\Project_2\P2_Pathfinding.cpp" />
     <ClCompile Include="Source\Student\Project_3\P3_TerrainAnalysis.cpp" />

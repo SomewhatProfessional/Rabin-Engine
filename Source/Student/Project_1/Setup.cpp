@@ -3,13 +3,24 @@
 #include "Agent/CameraAgent.h"
 
 #define NUM_OF_GRASSES 50
-#define NUM_OF_DEER 10
-#define NUM_OF_TIGERS 2
+#define NUM_OF_DEER 25
+#define NUM_OF_TIGERS 3
 #define NUM_OF_BIRDS 1
+#define NUM_OF_HUNTERS 1
 
 void ProjectOne::setup()
 {
    // Create your inital agents //
+
+   // Create hunter that shoots at tigers and birds.
+   for (int i = 0; i < NUM_OF_HUNTERS; i++)
+   {
+      Agent* hunter = agents->create_behavior_agent("Hunter", BehaviorTreeTypes::Hunter);
+      Vec3 pos = RNG::world_position();
+      hunter->set_position(pos);
+      hunter->set_specific_scaling(Vec3(2.0f, 2.0f, 2.0f));
+      hunter->set_color(Vec3(1.0f, 1.0f, 1.0f));
+   }
 
    // Create bird that flies towards the players cursor, but will be stunned for a second if the mouse is clicked.
    for (int i = 0; i < NUM_OF_BIRDS; i++)

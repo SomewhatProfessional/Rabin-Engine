@@ -1,7 +1,6 @@
 #include <pch.h>
 #include "L_Flee.h"
 
-#define FLEE_DISTANCE 5
 #define SPEED_BONUS 2
 
 L_Flee::L_Flee() : timer(0.0f)

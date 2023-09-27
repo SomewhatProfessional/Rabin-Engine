@@ -3,6 +3,8 @@
 #include "../Source/Student/Project_1/Trees/Deer.bht"
 #include "../Source/Student/Project_1/Trees/Example.bht"
 #include "../Source/Student/Project_1/Trees/Grass.bht"
+#include "../Source/Student/Project_1/Trees/Hunter.bht"
 #include "../Source/Student/Project_1/Trees/Idle.bht"
 #include "../Source/Student/Project_1/Trees/Player.bht"
+#include "../Source/Student/Project_1/Trees/Projectile.bht"
 #include "../Source/Student/Project_1/Trees/Tiger.bht"

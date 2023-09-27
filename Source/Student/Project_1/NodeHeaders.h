@@ -36,3 +36,8 @@
 #include "Leaf/L_FindMouse.h"
 #include "Leaf/L_RotateToMouse.h"
 #include "Leaf/L_MoveForward.h"
+#include "Leaf/L_CheckForTarget.h"
+#include "Leaf/L_AimAtTarget.h"
+#include "Leaf/L_LeadTarget.h"
+#include "Leaf/L_Shoot.h"
+#include "Leaf/L_CheckForCollision.h"
