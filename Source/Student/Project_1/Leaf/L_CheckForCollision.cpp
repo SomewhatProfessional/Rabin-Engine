@@ -34,7 +34,7 @@ void L_CheckForCollision::on_enter()
    }
 
    // If we hit the edge of the map, delete ourselves.
-   if(our_pos.x <= 0 || our_pos.x  >= 100 || our_pos.z <= 0 || our_pos.z >= 100)
+   if(our_pos.x <= 1 || our_pos.x  >= 99 || our_pos.z <= 1 || our_pos.z >= 99)
       agents->destroy_agent(agent);
 
    BehaviorNode::on_leaf_enter();

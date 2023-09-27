@@ -18,6 +18,8 @@
 
 // Student Decorator Nodes
 #include "Decorator/D_IsBeingChased.h"
+#include "Decorator/D_TargetIsTiger.h"
+#include "Decorator/D_RepeatTwoTimes.h"
 
 // Example Leaf Nodes
 #include "Leaf/L_CheckMouseClick.h"

@@ -256,6 +256,8 @@
     <ClInclude Include="Source\Student\Project_1\Decorator\D_InvertedRepeater.h" />
     <ClInclude Include="Source\Student\Project_1\Decorator\D_IsBeingChased.h" />
     <ClInclude Include="Source\Student\Project_1\Decorator\D_RepeatFourTimes.h" />
+    <ClInclude Include="Source\Student\Project_1\Decorator\D_RepeatTwoTimes.h" />
+    <ClInclude Include="Source\Student\Project_1\Decorator\D_TargetIsTiger.h" />
     <ClInclude Include="Source\Student\Project_1\Leaf\L_AimAtTarget.h" />
     <ClInclude Include="Source\Student\Project_1\Leaf\L_CheckForCollision.h" />
     <ClInclude Include="Source\Student\Project_1\Leaf\L_CheckForTarget.h" />
@@ -350,6 +352,8 @@
     <ClCompile Include="Source\Student\Project_1\Decorator\D_InvertedRepeater.cpp" />
     <ClCompile Include="Source\Student\Project_1\Decorator\D_IsBeingChased.cpp" />
     <ClCompile Include="Source\Student\Project_1\Decorator\D_RepeatFourTimes.cpp" />
+    <ClCompile Include="Source\Student\Project_1\Decorator\D_RepeatTwoTimes.cpp" />
+    <ClCompile Include="Source\Student\Project_1\Decorator\D_TargetIsTiger.cpp" />
     <ClCompile Include="Source\Student\Project_1\Leaf\L_AimAtTarget.cpp" />
     <ClCompile Include="Source\Student\Project_1\Leaf\L_CheckForCollision.cpp" />
     <ClCompile Include="Source\Student\Project_1\Leaf\L_CheckForTarget.cpp" />

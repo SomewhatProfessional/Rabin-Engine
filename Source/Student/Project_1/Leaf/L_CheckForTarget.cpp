@@ -1,7 +1,7 @@
 #include <pch.h>
 #include "L_CheckForTarget.h"
 
-#define DIST_TO_TARGET 20
+#define DIST_TO_TARGET 100
 static bool success = false;
 
 L_CheckForTarget::L_CheckForTarget()

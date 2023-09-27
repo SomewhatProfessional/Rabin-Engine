@@ -8,7 +8,9 @@ REGISTER_DECORATOR(D_Delay, "D_Delay")
 REGISTER_DECORATOR(D_InvertedRepeater, "D_InvertedRepeater")
 REGISTER_DECORATOR(D_RepeatFourTimes, "D_RepeatFourTimes")
 
-REGISTER_DECORATOR(D_IsBeingChased, "D_IsBeingChased")
+REGISTER_DECORATOR(D_IsBeingChased, "Checks if a tiger is within close proximity to a deer.")
+REGISTER_DECORATOR(D_TargetIsTiger, "Checks if the target in the agents blackboard is a tiger.")
+REGISTER_DECORATOR(D_RepeatTwoTimes, "Repeats the childs action twice.")
 
 
 REGISTER_LEAF(L_CheckMouseClick, "L_CheckMouseClick")
@@ -26,7 +28,6 @@ REGISTER_LEAF(L_Flee, "Action: Runs from the nearest tiger.")
 REGISTER_LEAF(L_FindMouse, "Action: Finds the position of the mouse, and places that value on the blackboard.")
 REGISTER_LEAF(L_RotateToMouse, "Action: Rotates the agent to face towards the mouse, only moves a little at a time.")
 REGISTER_LEAF(L_MoveForward, "Action: Moves the agent forward based on their forward vector.")
-
 REGISTER_LEAF(L_CheckForTarget, "Condition: Checks if the hunter has a valid target(deer or tiger).")
 REGISTER_LEAF(L_AimAtTarget, "Action: Rotates the agent to face towards target.")
 REGISTER_LEAF(L_LeadTarget, "Action: Rotates the agent to face where the target is going to be when the projectile arrives.")
