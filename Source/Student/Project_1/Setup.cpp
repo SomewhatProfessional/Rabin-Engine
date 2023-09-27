@@ -3,61 +3,58 @@
 #include "Agent/CameraAgent.h"
 
 #define NUM_OF_GRASSES 50
-#define NUM_OF_DEER 5
-#define NUM_OF_TIGERS 1
+#define NUM_OF_DEER 10
+#define NUM_OF_TIGERS 2
+#define NUM_OF_BIRDS 1
 
 void ProjectOne::setup()
 {
-   // Create your inital agents
-   agents->create_behavior_agent("Player", BehaviorTreeTypes::Example);
+   // Create your inital agents //
 
-   // Create deer
-   for (int i = 0; i < NUM_OF_DEER; i++)
-      agents->create_behavior_agent("Deer", BehaviorTreeTypes::Deer);
-
-   std::vector<Agent*> deer = agents->get_all_agents_by_type("Deer");
-   for (int i = 0; i < deer.size(); i++)
+   // Create bird that flies towards the players cursor, but will be stunned for a second if the mouse is clicked.
+   for (int i = 0; i < NUM_OF_BIRDS; i++)
    {
-      deer[i]->set_position(RNG::world_position());
-      deer[i]->set_specific_scaling(Vec3(1.5f, 1.5f, 1.5f));
-      deer[i]->set_color(Vec3(0.8f, 0.5f, 0.0f));
+      Agent* bird = agents->create_behavior_agent("Bird", BehaviorTreeTypes::Bird);
+      Vec3 pos = RNG::world_position();
+      pos.y = 20;
+      bird->set_position(pos);
+      bird->set_specific_scaling(Vec3(1.5f, 0.25f, 1.5f));
+      bird->set_color(Vec3(0.0f, 0.0f, 1.0f));
    }
+
+   // Create deer that eat grass and avoid tigers
+   for (int i = 0; i < NUM_OF_DEER; i++)
+   {
+      Agent* deer = agents->create_behavior_agent("Deer", BehaviorTreeTypes::Deer);
+
+      deer->set_position(RNG::world_position());
+      deer->set_specific_scaling(Vec3(1.5f, 1.5f, 1.5f));
+      deer->set_color(Vec3(0.8f, 0.5f, 0.0f));
+   }
+   
 
    // Create grass
    for (int i = 0; i < NUM_OF_GRASSES; i++)
-      agents->create_behavior_agent("Grass", BehaviorTreeTypes::Grass);
-
-   // Make it actually look like grass, and place it randomly around the map.
-   std::vector<Agent*> grasses = agents->get_all_agents_by_type("Grass"); 
-   for (int i = 0; i < grasses.size(); i++)
    {
-      grasses[i]->set_position(RNG::world_position());
-      grasses[i]->set_specific_scaling(Vec3(1.0f, 0.25f, 1.0f));
-      grasses[i]->set_yaw(RNG::range(0.0f, 3.0f));
-      grasses[i]->set_color(Vec3(0.0f, 0.8f, 0.0f));
+      Agent* grass = agents->create_behavior_agent("Grass", BehaviorTreeTypes::Grass);
+      grass->set_position(RNG::world_position());
+      grass->set_specific_scaling(Vec3(1.0f, 0.25f, 1.0f));
+      grass->set_yaw(RNG::range(0.0f, 3.0f));
+      grass->set_color(Vec3(0.0f, 0.8f, 0.0f));
    }
 
 
-  
-   
-   
-   // Create tiger
+   // Create tiger that hunts deer.
    for (int i = 0; i < NUM_OF_TIGERS; i++)
-      agents->create_behavior_agent("Tiger", BehaviorTreeTypes::Tiger);
-
-   agents->create_behavior_agent("Tiger", BehaviorTreeTypes::Tiger);
-   std::vector<Agent*> tigers = agents->get_all_agents_by_type("Tiger");
-   for (int i = 0; i < tigers.size(); i++)
    {
-      tigers[i]->set_position(RNG::world_position());
-      tigers[i]->set_specific_scaling(Vec3(2.0f, 2.0f, 2.0f));
-      tigers[i]->set_color(Vec3(1.0f, 0.0f, 0.0f));
+      Agent* tiger = agents->create_behavior_agent("Tiger", BehaviorTreeTypes::Tiger);
+      tiger->set_position(RNG::world_position());
+      tiger->set_specific_scaling(Vec3(2.0f, 2.0f, 2.0f));
+      tiger->set_color(Vec3(1.0f, 0.0f, 0.0f));
    }
-
-   // Create bird
-
 
    // Create player
+   //agents->create_behavior_agent("Player", BehaviorTreeTypes::Example);
 
 
    // you can technically load any map you want, even create your own map file,

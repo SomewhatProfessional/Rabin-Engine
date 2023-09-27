@@ -122,4 +122,3 @@ void ProjectOne::on_f3()
 {
     engine->change_projects(Project::Type::THREE);
 }
-

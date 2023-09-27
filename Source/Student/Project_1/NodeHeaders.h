@@ -17,6 +17,7 @@
 #include "Decorator/D_RepeatFourTimes.h"
 
 // Student Decorator Nodes
+#include "Decorator/D_IsBeingChased.h"
 
 // Example Leaf Nodes
 #include "Leaf/L_CheckMouseClick.h"
@@ -27,6 +28,11 @@
 #include "Leaf/L_PlaySound.h"
 
 // Student Leaf Nodes
-#include "Leaf/L_CheckIfEaten.h"
 #include "Leaf/L_CheckIfNearGrass.h"
 #include "Leaf/L_EatNearestGrass.h"
+#include "Leaf/L_CheckIfNearDeer.h"
+#include "Leaf/L_EatNearestDeer.h"
+#include "Leaf/L_Flee.h"
+#include "Leaf/L_FindMouse.h"
+#include "Leaf/L_RotateToMouse.h"
+#include "Leaf/L_MoveForward.h"

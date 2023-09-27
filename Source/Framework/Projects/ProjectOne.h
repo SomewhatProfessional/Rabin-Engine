@@ -36,5 +36,13 @@ private:
     void on_f2();
     void on_f3();
 
+    // Student implemented input
+    /*
+    void on_w();
+    void on_a();
+    void on_s();
+    void on_d();
+    */
+
     void setup();
 };

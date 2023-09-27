@@ -1,14 +1,12 @@
 #pragma once
 #include "BehaviorNode.h"
 
-class L_CheckIfEaten : public BaseNode<L_CheckIfEaten>
+class L_MoveForward : public BaseNode<L_MoveForward>
 {
 public:
-   L_CheckIfEaten();
+   L_MoveForward();
 
 protected:
-    float timer;
-
     virtual void on_enter() override;
     virtual void on_update(float dt) override;
 };

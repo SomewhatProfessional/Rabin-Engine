@@ -2,7 +2,7 @@
 #include "L_CheckIfNearGrass.h"
 
 #define DIST_TO_GRASS 10
-bool success = false;
+static bool success = false;
 
 L_CheckIfNearGrass::L_CheckIfNearGrass() : timer(0.0f)
 {}

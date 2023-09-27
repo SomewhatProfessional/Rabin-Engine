@@ -3,9 +3,13 @@ REGISTER_CONTROLFLOW(C_RandomSelector, "C_RandomSelector")
 REGISTER_CONTROLFLOW(C_Selector, "C_Selector")
 REGISTER_CONTROLFLOW(C_Sequencer, "C_Sequencer")
 
+
 REGISTER_DECORATOR(D_Delay, "D_Delay")
 REGISTER_DECORATOR(D_InvertedRepeater, "D_InvertedRepeater")
 REGISTER_DECORATOR(D_RepeatFourTimes, "D_RepeatFourTimes")
+
+REGISTER_DECORATOR(D_IsBeingChased, "D_IsBeingChased")
+
 
 REGISTER_LEAF(L_CheckMouseClick, "L_CheckMouseClick")
 REGISTER_LEAF(L_Idle, "L_Idle")
@@ -14,6 +18,11 @@ REGISTER_LEAF(L_MoveToMouseClick, "L_MoveToMouseClick")
 REGISTER_LEAF(L_MoveToRandomPosition, "L_MoveToRandomPosition")
 REGISTER_LEAF(L_PlaySound, "L_PlaySound")
 
-REGISTER_LEAF(L_CheckIfEaten, "Condition: Checks if this plant has just been eaten by an animal.")
 REGISTER_LEAF(L_CheckIfNearGrass, "Condition: Checks if this animal is close to a grass agent.")
-REGISTER_LEAF(L_EatNearestGrass, "Condition: Walks to the nearest grass agent and eats it.")
+REGISTER_LEAF(L_EatNearestGrass, "Action: Walks to the nearest grass agent and eats it.")
+REGISTER_LEAF(L_CheckIfNearDeer, "Condition: Checks if this animal is close to a deer agent.")
+REGISTER_LEAF(L_EatNearestDeer, "Action: Walks to the nearest deer agent and eats it.")
+REGISTER_LEAF(L_Flee, "Action: Runs from the nearest tiger.")
+REGISTER_LEAF(L_FindMouse, "Action: Finds the position of the mouse, and places that value on the blackboard.")
+REGISTER_LEAF(L_RotateToMouse, "Action: Rotates the agent to face towards the mouse, only moves a little at a time.")
+REGISTER_LEAF(L_MoveForward, "Action: Moves the agent forward based on their forward vector.")

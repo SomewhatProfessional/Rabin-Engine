@@ -1,4 +1,5 @@
 #include "../Source/Student/Project_1/Trees/BasicWander.bht"
+#include "../Source/Student/Project_1/Trees/Bird.bht"
 #include "../Source/Student/Project_1/Trees/Deer.bht"
 #include "../Source/Student/Project_1/Trees/Example.bht"
 #include "../Source/Student/Project_1/Trees/Grass.bht"
