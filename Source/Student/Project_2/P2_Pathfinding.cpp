@@ -1,6 +1,7 @@
 #include <pch.h>
 #include "Projects/ProjectTwo.h"
 #include "P2_Pathfinding.h"
+#include <algorithm>
 
 #pragma region Extra Credit
 bool ProjectTwo::implemented_floyd_warshall()
@@ -34,6 +35,31 @@ bool AStarPather::initialize()
         Callback is just a typedef for std::function<void(void)>, so any std::invoke'able
         object that std::function can wrap will suffice.
     */
+
+   for (int row = 0; row < 40; row++)
+   {
+      for (int column = 0; column < 40; column++)
+      {
+         map[row][column].gridPos.row = row;
+         map[row][column].gridPos.col = column;
+      }
+   }
+
+   int i = 0;
+   int row = -1;
+   int col = -1;
+   for (int row = -1; row < 2; row++)
+   {
+      for (int col = -1; col < 2; col++)
+      {
+         neighbors[i].row = row;
+         neighbors[i].col = col;
+         i++;
+      }
+
+   }
+   neighbors[4].row = 1;
+   neighbors[4].col = 1;
 
     return true; // return false if any errors actually occur, to stop engine initialization
 }
@@ -81,14 +107,167 @@ PathResult AStarPather::compute_path(PathRequest &request)
     */
 
     // WRITE YOUR CODE HERE
+   GridPos start = terrain->get_grid_position(request.start);
+   GridPos goal = terrain->get_grid_position(request.goal);
+   terrain->set_color(start, Colors::Orange);
+   terrain->set_color(goal, Colors::Orange);
+   
 
+   if (request.newRequest)
+   {
+      // Clear open and closed lists
+      // push start node onto open list.
+      open_list.Push(&map[start.row][start.col]);
+   }
+
+   while (open_list.Empty() != true)
+   {
+      Node* parent_node = open_list.PopCheapest();
+
+      if (parent_node->gridPos == goal)
+      {
+         // Retrace the path.
+         request.path.push_back(request.start);
+         //request.path.push_back(request.goal);
+         while (parent_node)
+         {
+            request.path.push_back(terrain->get_world_position(parent_node->gridPos));
+            parent_node = parent_node->parent;
+         }
+
+         return PathResult::COMPLETE;
+      }
+
+      parent_node->onList = List::Closed;
+
+      // For all neighboring child nodes.
+      for (int i = 0; i < 8; i++)
+      {
+         GridPos neighbor_pos;
+         neighbor_pos.row = parent_node->gridPos.row + neighbors[i].row;
+         neighbor_pos.col = parent_node->gridPos.col + neighbors[i].col;
+
+         // Check if in bounds.
+         if (terrain->is_valid_grid_position(neighbor_pos))
+         {
+            // Check if neighbor is wall
+            if (terrain->is_wall(neighbor_pos))
+               continue; // Not valid neighbor node.
+
+            
+            // Check if diagonals are walls.
+            // Apply only x-offset, check if wall.
+            GridPos diagonal;
+            diagonal.col = parent_node->gridPos.col + neighbors[i].col;
+            diagonal.row = parent_node->gridPos.row;
+            if (terrain->is_wall(diagonal))
+               continue; // Not valid neighbor node.
+
+            // Apply only y-offset, check if wall.
+            diagonal.col = parent_node->gridPos.col;
+            diagonal.row = parent_node->gridPos.row + neighbors[i].row;
+            if (terrain->is_wall(diagonal))
+               continue; // Not valid neighbor node.
+
+            // Compute cost of node.
+            Node * neighbor = &map[neighbor_pos.row][neighbor_pos.col];
+
+            // Given cost is the parent node's given cost, plus the given cost from the parent to the node.
+            float given_cost = parent_node->givenCost;
+            if (neighbors[i].row != 0 && neighbors[i].col != 0) // If diagonal.
+               given_cost += 1.41f;
+            else
+               given_cost += 1.0f;
+
+            
+            // f(x) = g(x) + h(x)
+            float final_cost = given_cost + OctileDistance(neighbor_pos, goal);
+            // If child is not on any list, put it on the open list.
+            if (neighbor->onList == List::None)
+            {
+               neighbor->givenCost = given_cost;
+               neighbor->finalCost = final_cost;
+               neighbor->parent = parent_node;
+               open_list.Push(neighbor);
+
+            }
+            else if (final_cost < neighbor->finalCost)
+            {
+               neighbor->givenCost = given_cost;
+               neighbor->finalCost = final_cost;
+               neighbor->parent = parent_node;
+
+               open_list.Push(neighbor);
+
+            }
+         }
+      
+      }
+
+      if (request.settings.singleStep == true)
+         return PathResult::PROCESSING;
+   }
     
-    // Just sample code, safe to delete
-    GridPos start = terrain->get_grid_position(request.start);
-    GridPos goal = terrain->get_grid_position(request.goal);
-    terrain->set_color(start, Colors::Orange);
-    terrain->set_color(goal, Colors::Orange);
-    request.path.push_back(request.start);
-    request.path.push_back(request.goal);
-    return PathResult::COMPLETE;
+    return PathResult::IMPOSSIBLE;
+}
+
+
+Node::Node() : finalCost(0), givenCost(0), onList(List::None), parent(nullptr), gridPos()
+{
+}
+
+FastArray::FastArray()
+{
+   data = new Node*[40 * 40];
+   last = -1;
+}
+
+FastArray::~FastArray()
+{
+   delete[] data;
+}
+
+void FastArray::Push(Node* node)
+{
+   data[++last] = node;
+   data[last]->onList = List::Open;
+}
+
+Node* FastArray::PopCheapest()
+{
+   float min_cost = FLT_MAX;
+   int min_cost_idx = 0;
+
+   for (int i = 0; i <= last; i++)
+   {
+      if (data[i]->finalCost < min_cost)
+      { 
+         min_cost = data[i]->finalCost;
+         min_cost_idx = i;
+      }
+   }
+
+   Node* popped_node = data[min_cost_idx];
+   data[min_cost_idx] = data[last];
+   --last;
+
+   return popped_node;
+}
+
+void FastArray::Clear()
+{
+   last = -1;
+}
+
+bool FastArray::Empty()
+{
+   return (last == -1);
+}
+
+float AStarPather::OctileDistance(GridPos start, GridPos end)
+{
+   int xDiff = std::abs(start.row - end.row);
+   int yDiff = std::abs(start.col - end.col);
+
+   return std::min(xDiff, yDiff) * 1.41f + std::max(xDiff, yDiff) - std::min(xDiff, yDiff);
 }

@@ -1,6 +1,42 @@
 #pragma once
 #include "Misc/PathfindingDetails.hpp"
 
+enum class List
+{
+   Open,
+   Closed,
+   None,
+};
+
+class Node
+{
+public:
+   Node();
+   Node* parent;
+   GridPos gridPos;
+   float finalCost;
+   float givenCost;
+   List onList;
+};
+
+class FastArray
+{
+public:
+   FastArray();
+   ~FastArray();
+
+   //void Push(Node node);
+   void Push(Node* node);
+
+   Node* PopCheapest();
+   void Clear();
+   bool Empty();
+
+private:
+   Node** data;
+   int last;
+};
+
 class AStarPather
 {
 public:
@@ -23,4 +59,11 @@ public:
         makes sense to you.
     */
 
+private:
+   float CalculateGivenCost(Node* node);
+   float OctileDistance(GridPos start, GridPos end);
+   FastArray open_list;
+   Node map[40][40];
+
+   GridPos neighbors[8];
 };
