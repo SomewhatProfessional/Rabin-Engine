@@ -35,6 +35,18 @@ private:
    int last; // The index of the last element in the array
 };
 
+class Heuristics
+{
+public:
+   float Distance(GridPos start, GridPos end, Heuristic h);
+
+private:
+   float Octile(float x_diff, float y_diff);
+   float Chebyshev(float x_diff, float y_diff);
+   float Inconsistent(GridPos start, GridPos end, float x_diff, float y_diff);
+   float Manhattan(float x_diff, float y_diff);
+   float Euclidean(float x_diff, float y_diff);
+};
 
 class AStarPather
 {
@@ -60,9 +72,11 @@ public:
 
 private:
    void ClearNodeMap();
-   float OctileDistance(GridPos start, GridPos end);
+   
    FastArray open_list;
    Node map[40][40];
 
    GridPos neighbors[8];
+
+   Heuristics heuristics;
 };

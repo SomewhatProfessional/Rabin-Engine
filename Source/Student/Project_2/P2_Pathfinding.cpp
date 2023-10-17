@@ -65,6 +65,72 @@ bool FastArray::Empty()
    return (last == -1);
 }
 
+// Heuristics Implementation //
+///////////////////////////////
+
+float Heuristics::Distance(GridPos start, GridPos end, Heuristic h)
+{
+   float xDiff = static_cast<float>(std::abs(start.row - end.row));
+   float yDiff = static_cast<float>(std::abs(start.col - end.col));
+
+   switch (h)
+   {
+   case Heuristic::OCTILE:
+      return Octile(xDiff, yDiff);
+      break;
+   case Heuristic::CHEBYSHEV:
+      return Chebyshev(xDiff, yDiff);
+      break;
+   case Heuristic::INCONSISTENT:
+      return Inconsistent(start, end, xDiff, yDiff);
+      break;
+   case Heuristic::MANHATTAN:
+      return (xDiff, yDiff);
+      break;
+   case Heuristic::EUCLIDEAN:
+      return Euclidean(xDiff, yDiff);
+      break;
+   default:
+      return 0;
+      break;
+   }
+}
+
+float Heuristics::Octile(float x_diff, float y_diff)
+{
+   return std::min(x_diff, y_diff) * 1.41f + std::max(x_diff, y_diff) - std::min(x_diff, y_diff);
+}
+
+float Heuristics::Chebyshev(float x_diff, float y_diff)
+{
+   return std::max(x_diff, y_diff);
+}
+
+float Heuristics::Inconsistent(GridPos start, GridPos end, float x_diff, float y_diff)
+{
+   if ((start.row + start.col) % 2 > 0)
+   {
+      return Euclidean(x_diff, y_diff);
+   }
+
+   return 0;
+}
+
+float Heuristics::Manhattan(float x_diff, float y_diff)
+{
+   return x_diff + y_diff;
+}
+
+float Heuristics::Euclidean(float x_diff, float y_diff)
+{
+   return std::sqrt(x_diff * x_diff + y_diff * y_diff);
+}
+
+
+
+// AStarPather Implementation //
+////////////////////////////////
+
 // Uses recursion to start at the goal node, follow the parents up until we hit the start,
 // and then push the nodes in the correct order.
 void TracePath(Node* node, WaypointList& list)
@@ -186,6 +252,7 @@ PathResult AStarPather::compute_path(PathRequest& request)
            COMPLETE - a path to the goal was found and has been built in request.path
            IMPOSSIBLE - a path from start to goal does not exist, do not add start position to path
    */
+   request.settings.heuristic;
 
    GridPos start = terrain->get_grid_position(request.start);
    GridPos goal = terrain->get_grid_position(request.goal);
@@ -258,7 +325,7 @@ PathResult AStarPather::compute_path(PathRequest& request)
 
 
             // f(x) = g(x) + h(x)
-            float final_cost = given_cost + OctileDistance(neighbor_pos, goal);
+            float final_cost = given_cost + heuristics.Distance(neighbor_pos, goal, request.settings.heuristic);
             // If child is not on any list, put it on the open list.
             if (neighbor->onList == List::None)
             {
@@ -286,12 +353,4 @@ PathResult AStarPather::compute_path(PathRequest& request)
    }
    
    return PathResult::IMPOSSIBLE;
-}
-
-float AStarPather::OctileDistance(GridPos start, GridPos end)
-{
-   int xDiff = std::abs(start.row - end.row);
-   int yDiff = std::abs(start.col - end.col);
-
-   return std::min(xDiff, yDiff) * 1.41f + std::max(xDiff, yDiff) - std::min(xDiff, yDiff);
 }
