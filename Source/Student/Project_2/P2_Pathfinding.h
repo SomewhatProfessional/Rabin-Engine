@@ -48,6 +48,15 @@ private:
    float Euclidean(float x_diff, float y_diff);
 };
 
+class PostProcessing
+{
+public:
+   void Rubberbanding(Node* end_node);
+   bool CheckForWalls(Node* corner_1, Node* corner_2);
+
+   //void CatmullRomSpline();
+};
+
 class AStarPather
 {
 public:
@@ -79,4 +88,5 @@ private:
    GridPos neighbors[8];
 
    Heuristics heuristics;
+   PostProcessing post_proc;
 };

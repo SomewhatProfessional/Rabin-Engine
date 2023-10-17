@@ -32,6 +32,10 @@ FastArray::FastArray() : data()
 
 void FastArray::Push(Node* node)
 {
+   // Overflow check
+   if (last >= 3199)
+      return;
+
    data[++last] = node;
    data[last]->onList = List::Open;
 }
@@ -128,7 +132,60 @@ float Heuristics::Euclidean(float x_diff, float y_diff)
    return std::sqrt(x_diff * x_diff + y_diff * y_diff);
 }
 
+// Post Processing Implementation //
+////////////////////////////////////
+void PostProcessing::Rubberbanding(Node* end_node)
+{
+   // Move node up the path, skipping the middle node.
+   Node* start_node = end_node->parent;
+   if (start_node)
+      start_node = start_node->parent;
+   else
+      return; // We reached the end, can't do anymore.
 
+   // Make sure to update parent pointers.
+
+   // While we haven't reached the start of the path.
+   while (start_node)
+   {
+      // Use the grid positions of the start and end nodes to create a square.
+      // Check if any walls exist within that square.
+      if (CheckForWalls(start_node, end_node))
+      {
+         // Eliminate the middle node.
+         end_node->parent = start_node;
+      }
+      else
+      {
+         // We can't eliminate the middle node. Move both nodes up the path.
+         end_node = end_node->parent;
+      }
+
+      // The start node should move up with every iteration.
+      start_node = start_node->parent;
+   }
+}
+
+// Returns true if no walls were found.
+bool PostProcessing::CheckForWalls(Node* corner_1, Node* corner_2)
+{
+   int x_min = std::min(corner_1->gridPos.col, corner_2->gridPos.col);
+   int x_max = std::max(corner_1->gridPos.col, corner_2->gridPos.col);
+
+   int y_min = std::min(corner_1->gridPos.row, corner_2->gridPos.row);
+   int y_max = std::max(corner_1->gridPos.row, corner_2->gridPos.row);
+
+   for (int row = y_min; row < y_max; row++)
+   {
+      for (int col = x_min; col < x_max; col++)
+      {
+         if (terrain->is_wall(row, col))
+            return false;
+      }
+   }
+
+   return true;
+}
 
 // AStarPather Implementation //
 ////////////////////////////////
@@ -291,6 +348,9 @@ PathResult AStarPather::compute_path(PathRequest& request)
       {
          // Follow the path back and push it.
          TracePath(parent_node, request.path);
+
+         // Post-Processing
+
 
          return PathResult::COMPLETE;
       }
