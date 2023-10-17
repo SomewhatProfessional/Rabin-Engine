@@ -3,6 +3,8 @@
 #include "Projects/ProjectTwo.h"
 #include <algorithm>
 
+static int iterations = 0;
+
 #pragma region Extra Credit
 bool ProjectTwo::implemented_floyd_warshall()
 {
@@ -252,15 +254,20 @@ PathResult AStarPather::compute_path(PathRequest& request)
            COMPLETE - a path to the goal was found and has been built in request.path
            IMPOSSIBLE - a path from start to goal does not exist, do not add start position to path
    */
-   request.settings.heuristic;
 
    GridPos start = terrain->get_grid_position(request.start);
    GridPos goal = terrain->get_grid_position(request.goal);
-   terrain->set_color(start, Colors::Orange);
-   terrain->set_color(goal, Colors::Orange);
+
+   if (request.settings.debugColoring)
+   {
+      terrain->set_color(start, Colors::Orange);
+      terrain->set_color(goal, Colors::Orange);
+   }
 
    if (request.newRequest)
    {
+      //std::cout << "Iteration: " << iterations++ << std::endl;
+
       // Clear open and closed lists
       ClearNodeMap();
       open_list.Clear();
@@ -282,7 +289,9 @@ PathResult AStarPather::compute_path(PathRequest& request)
       }
 
       parent_node->onList = List::Closed;
-      terrain->set_color(parent_node->gridPos, Colors::Yellow);
+
+      if (request.settings.debugColoring)
+         terrain->set_color(parent_node->gridPos, Colors::Yellow);
 
       // For all neighboring child nodes.
       for (int i = 0; i < 8; i++)
@@ -297,7 +306,6 @@ PathResult AStarPather::compute_path(PathRequest& request)
             // Check if neighbor is wall
             if (terrain->is_wall(neighbor_pos))
                continue; // Not valid neighbor node.
-
 
             // Check if diagonals are walls.
             // Apply only x-offset, check if wall.
@@ -333,7 +341,9 @@ PathResult AStarPather::compute_path(PathRequest& request)
                neighbor->finalCost = final_cost;
                neighbor->parent = parent_node;
                open_list.Push(neighbor);
-               terrain->set_color(neighbor->gridPos, Colors::Blue);
+
+               if(request.settings.debugColoring)
+                  terrain->set_color(neighbor->gridPos, Colors::Blue);
             }
             else if (final_cost < neighbor->finalCost)
             {
@@ -342,10 +352,11 @@ PathResult AStarPather::compute_path(PathRequest& request)
                neighbor->parent = parent_node;
 
                open_list.Push(neighbor);
-               terrain->set_color(neighbor->gridPos, Colors::Blue);
+
+               if (request.settings.debugColoring)
+                  terrain->set_color(neighbor->gridPos, Colors::Blue);
             }
          }
-
       }
 
       if (request.settings.singleStep == true)
