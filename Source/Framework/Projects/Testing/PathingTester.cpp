@@ -155,7 +155,7 @@ void PathTester::execute_speed_test()
 
     for (size_t i = 0; i < numIter; ++i)
     {
-       std::cout << "Iteration: " << i << std::endl;
+        std::cout << "Iteration: " << i << std::endl;
 
         timer.start();
 

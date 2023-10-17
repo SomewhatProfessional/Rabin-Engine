@@ -258,6 +258,12 @@ PathResult AStarPather::compute_path(PathRequest& request)
    GridPos start = terrain->get_grid_position(request.start);
    GridPos goal = terrain->get_grid_position(request.goal);
 
+   Node* parent_node = nullptr;
+   GridPos neighbor_pos;
+   Node* neighbor = nullptr;
+   GridPos diagonal;
+
+
    if (request.settings.debugColoring)
    {
       terrain->set_color(start, Colors::Orange);
@@ -278,7 +284,7 @@ PathResult AStarPather::compute_path(PathRequest& request)
 
    while (!open_list.Empty())
    {
-      Node* parent_node = open_list.PopCheapest();
+      parent_node = open_list.PopCheapest();
 
       if (parent_node->gridPos == goal)
       {
@@ -296,7 +302,6 @@ PathResult AStarPather::compute_path(PathRequest& request)
       // For all neighboring child nodes.
       for (int i = 0; i < 8; i++)
       {
-         GridPos neighbor_pos;
          neighbor_pos.row = parent_node->gridPos.row + neighbors[i].row;
          neighbor_pos.col = parent_node->gridPos.col + neighbors[i].col;
 
@@ -309,20 +314,22 @@ PathResult AStarPather::compute_path(PathRequest& request)
 
             // Check if diagonals are walls.
             // Apply only x-offset, check if wall.
-            GridPos diagonal;
-            diagonal.col = parent_node->gridPos.col + neighbors[i].col;
-            diagonal.row = parent_node->gridPos.row;
-            if (terrain->is_wall(diagonal))
-               continue; // Not valid neighbor node.
+            if (neighbors[i].row != 0 && neighbors[i].col != 0)
+            {
+               diagonal.col = parent_node->gridPos.col + neighbors[i].col;
+               diagonal.row = parent_node->gridPos.row;
+               if (terrain->is_wall(diagonal))
+                  continue; // Not valid neighbor node.
 
-            // Apply only y-offset, check if wall.
-            diagonal.col = parent_node->gridPos.col;
-            diagonal.row = parent_node->gridPos.row + neighbors[i].row;
-            if (terrain->is_wall(diagonal))
-               continue; // Not valid neighbor node.
+               // Apply only y-offset, check if wall.
+               diagonal.col = parent_node->gridPos.col;
+               diagonal.row = parent_node->gridPos.row + neighbors[i].row;
+               if (terrain->is_wall(diagonal))
+                  continue; // Not valid neighbor node.
+            }
 
             // Compute cost of node.
-            Node * neighbor = &map[neighbor_pos.row][neighbor_pos.col];
+            neighbor = &map[neighbor_pos.row][neighbor_pos.col];
 
             // Given cost is the parent node's given cost, plus the given cost from the parent to the node.
             float given_cost = parent_node->givenCost;
