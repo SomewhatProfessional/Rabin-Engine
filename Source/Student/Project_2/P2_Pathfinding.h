@@ -3,29 +3,27 @@
 
 enum class List
 {
+   None,
    Open,
    Closed,
-   None,
 };
 
 class Node
 {
 public:
-   Node();
-   Node* parent;
    GridPos gridPos;
+   Node* parent;
    float finalCost;
    float givenCost;
    List onList;
 };
 
+
 class FastArray
 {
 public:
    FastArray();
-   ~FastArray();
 
-   //void Push(Node node);
    void Push(Node* node);
 
    Node* PopCheapest();
@@ -33,9 +31,10 @@ public:
    bool Empty();
 
 private:
-   Node** data;
-   int last;
+   Node* data[1600]; // Max size = 40*40
+   int last; // The index of the last element in the array
 };
+
 
 class AStarPather
 {
@@ -60,7 +59,7 @@ public:
     */
 
 private:
-   float CalculateGivenCost(Node* node);
+   void ClearNodeMap();
    float OctileDistance(GridPos start, GridPos end);
    FastArray open_list;
    Node map[40][40];
