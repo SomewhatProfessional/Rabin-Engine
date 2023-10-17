@@ -3,8 +3,6 @@
 #include "Projects/ProjectTwo.h"
 #include <algorithm>
 
-static int iterations = 0;
-
 #pragma region Extra Credit
 bool ProjectTwo::implemented_floyd_warshall()
 {
@@ -22,10 +20,12 @@ bool ProjectTwo::implemented_jps_plus()
 }
 #pragma endregion
 
+Node::Node() : gridPos(), parent(nullptr), finalCost(0), givenCost(0), onList(List::None)
+{}
 
 // Open List Implementation //
 //////////////////////////////
-FastArray::FastArray()
+FastArray::FastArray() : data()
 {
    last = -1;
 }
@@ -263,6 +263,9 @@ PathResult AStarPather::compute_path(PathRequest& request)
    Node* neighbor = nullptr;
    GridPos diagonal;
 
+   float given_cost = 0;
+   float final_cost = 0;
+
 
    if (request.settings.debugColoring)
    {
@@ -272,8 +275,6 @@ PathResult AStarPather::compute_path(PathRequest& request)
 
    if (request.newRequest)
    {
-      //std::cout << "Iteration: " << iterations++ << std::endl;
-
       // Clear open and closed lists
       ClearNodeMap();
       open_list.Clear();
@@ -309,8 +310,10 @@ PathResult AStarPather::compute_path(PathRequest& request)
          if (terrain->is_valid_grid_position(neighbor_pos))
          {
             // Check if neighbor is wall
-            if (terrain->is_wall(neighbor_pos))
+            if ((terrain->is_wall(neighbor_pos)))
+            {
                continue; // Not valid neighbor node.
+            }
 
             // Check if diagonals are walls.
             // Apply only x-offset, check if wall.
@@ -332,17 +335,17 @@ PathResult AStarPather::compute_path(PathRequest& request)
             neighbor = &map[neighbor_pos.row][neighbor_pos.col];
 
             // Given cost is the parent node's given cost, plus the given cost from the parent to the node.
-            float given_cost = parent_node->givenCost;
+            given_cost = parent_node->givenCost;
             if (neighbors[i].row != 0 && neighbors[i].col != 0) // If diagonal.
                given_cost += 1.41f;
             else
                given_cost += 1.0f;
 
-
             // f(x) = g(x) + h(x)
-            float final_cost = given_cost + heuristics.Distance(neighbor_pos, goal, request.settings.heuristic);
+            final_cost = given_cost + heuristics.Distance(neighbor_pos, goal, request.settings.heuristic);
+
             // If child is not on any list, put it on the open list.
-            if (neighbor->onList == List::None)
+            if ((neighbor->onList == List::None) || (final_cost < neighbor->finalCost))
             {
                neighbor->givenCost = given_cost;
                neighbor->finalCost = final_cost;
@@ -350,17 +353,6 @@ PathResult AStarPather::compute_path(PathRequest& request)
                open_list.Push(neighbor);
 
                if(request.settings.debugColoring)
-                  terrain->set_color(neighbor->gridPos, Colors::Blue);
-            }
-            else if (final_cost < neighbor->finalCost)
-            {
-               neighbor->givenCost = given_cost;
-               neighbor->finalCost = final_cost;
-               neighbor->parent = parent_node;
-
-               open_list.Push(neighbor);
-
-               if (request.settings.debugColoring)
                   terrain->set_color(neighbor->gridPos, Colors::Blue);
             }
          }

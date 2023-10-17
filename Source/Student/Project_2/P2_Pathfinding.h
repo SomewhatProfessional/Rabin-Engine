@@ -11,11 +11,12 @@ enum class List
 class Node
 {
 public:
+   Node();
    GridPos gridPos;
    Node* parent;
+   List onList;
    float finalCost;
    float givenCost;
-   List onList;
 };
 
 
@@ -25,13 +26,12 @@ public:
    FastArray();
 
    void Push(Node* node);
-
    Node* PopCheapest();
    void Clear();
    bool Empty();
 
 private:
-   Node* data[1600]; // Max size = 40*40
+   Node* data[3200];
    int last; // The index of the last element in the array
 };
 
