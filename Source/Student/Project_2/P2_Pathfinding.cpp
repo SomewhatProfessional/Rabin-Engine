@@ -188,14 +188,43 @@ bool PostProcessing::CheckForWalls(Node* corner_1, Node* corner_2)
    return true;
 }
 
-void PostProcessing::Smoothing(Node* node)
+void PostProcessing::Smoothing(Node* node, WaypointList& list)
 {
-   // Select the first four points. (first point is doubled up
+   // Need to approach this with a recursive approach, starting from the actual beginning of the path.
+   // (Note) Check this end condition
+   if (!(node->parent->parent))
+      return;
+
+   Smoothing(node->parent, list);
+
+   // Select the first four points. (first point is doubled up)
+   Node* p1 = node->parent->parent;
+   Node* p2 = p1;
+   Node* p3 = node->parent;
+   Node* p4 = node;
+
+   list.push_back(terrain->get_world_position(p1->gridPos));
+
    // Use these to generate 3 new points.
-   // Move all four points down the path by 1.
-   // Generate 3 new points.
-   
-   //XMVectorCatmullRom
+   for (float t = 0.25f; t < 1.0f; t += 0.25f)
+   {
+      /*
+      list.push_back(
+           terrain->get_world_position(p1->gridPos) * (-0.5f*t*t*t + t*t - 0.5f*t)
+         + terrain->get_world_position(p2->gridPos) * (1.5f*t*t*t + -2.5f*t*t + 1.0f)
+         + terrain->get_world_position(p3->gridPos) * (-1.5f*t*t*t + 2.0f*t*t + 0.5f*5)
+         + terrain->get_world_position(p4->gridPos) * (0.5f*t*t*t - 0.5f*t*t));
+      */
+
+      Vec3 p1_pos = terrain->get_world_position(p1->gridPos);
+      Vec3 p2_pos = terrain->get_world_position(p2->gridPos);
+      Vec3 p3_pos = terrain->get_world_position(p3->gridPos);
+      Vec3 p4_pos = terrain->get_world_position(p4->gridPos);
+
+      list.push_back(XMVectorCatmullRom(p1_pos, p2_pos, p3_pos, p4_pos, t));
+   }
+
+   // Once we reach the end, do the last end case.
 }
 
 
@@ -361,10 +390,11 @@ PathResult AStarPather::compute_path(PathRequest& request)
          // Post-Processing
          if(request.settings.rubberBanding)
             post_proc.Rubberbanding(parent_node);
-         // Follow the path back and push it.
-         TracePath(parent_node, request.path);
 
-
+         if (request.settings.smoothing)
+            post_proc.Smoothing(parent_node, request.path);
+         else 
+            TracePath(parent_node, request.path); // Follow the path back and push it.
 
          return PathResult::COMPLETE;
       }
