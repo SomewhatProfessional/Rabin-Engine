@@ -53,7 +53,7 @@ class PostProcessing
 public:
    void Rubberbanding(Node* end_node);
    bool CheckForWalls(Node* corner_1, Node* corner_2);
-   void Smoothing(Node* node, WaypointList& list);
+   void Smoothing(Node* node, WaypointList& list, GridPos goal_pos);
 };
 
 class AStarPather
