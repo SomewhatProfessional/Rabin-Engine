@@ -24,54 +24,6 @@ bool ProjectTwo::implemented_jps_plus()
 Node::Node() : gridPos(), parent(nullptr), finalCost(0), givenCost(0), onList(List::None)
 {}
 
-// Open List Implementation //
-//////////////////////////////
-FastArray::FastArray() : data()
-{
-   last = -1;
-}
-
-void FastArray::Push(Node* node)
-{
-   // Overflow check
-   if (last >= 3199)
-      return;
-
-   data[++last] = node;
-   data[last]->onList = List::Open;
-}
-
-Node* FastArray::PopCheapest()
-{
-   float min_cost = FLT_MAX;
-   int min_cost_idx = 0;
-
-   for (int i = 0; i <= last; i++)
-   {
-      if (data[i]->finalCost < min_cost)
-      {
-         min_cost = data[i]->finalCost;
-         min_cost_idx = i;
-      }
-   }
-
-   Node* popped_node = data[min_cost_idx];
-   data[min_cost_idx] = data[last];
-   --last;
-
-   return popped_node;
-}
-
-void FastArray::Clear()
-{
-   last = -1;
-}
-
-bool FastArray::Empty()
-{
-   return (last == -1);
-}
-
 // Heuristics Implementation //
 ///////////////////////////////
 
@@ -241,7 +193,6 @@ void PostProcessing::Smoothing(Node* node, WaypointList& list, GridPos goal_pos)
    }
 }
 
-
 // AStarPather Implementation //
 ////////////////////////////////
 
@@ -403,10 +354,7 @@ PathResult AStarPather::compute_path(PathRequest& request)
       {
          // Post-Processing
          if (request.settings.rubberBanding)
-         {
             post_proc.Rubberbanding(parent_node);
-            // If smoothing is also enabled, add back in some nodes.
-         }
 
          if (request.settings.smoothing)
             post_proc.Smoothing(parent_node, request.path, goal);

@@ -19,16 +19,54 @@ public:
    float givenCost;
 };
 
-
 class FastArray
 {
 public:
-   FastArray();
+   FastArray()
+   {
+      last = -1;
+   }
 
-   void Push(Node* node);
-   Node* PopCheapest();
-   void Clear();
-   bool Empty();
+   void Push(Node* node)
+   {
+      // Overflow check
+      if (last >= 3199)
+         return;
+
+      data[++last] = node;
+      data[last]->onList = List::Open;
+   }
+
+   Node* PopCheapest()
+   {
+      float min_cost = FLT_MAX;
+      int min_cost_idx = 0;
+
+      for (int i = 0; i <= last; i++)
+      {
+         if (data[i]->finalCost < min_cost)
+         {
+            min_cost = data[i]->finalCost;
+            min_cost_idx = i;
+         }
+      }
+
+      Node* popped_node = data[min_cost_idx];
+      data[min_cost_idx] = data[last];
+      --last;
+
+      return popped_node;
+   }
+
+   void Clear()
+   {
+      last = -1;
+   }
+
+   bool Empty()
+   {
+      return (last == -1);
+   }
 
 private:
    Node* data[3200];
