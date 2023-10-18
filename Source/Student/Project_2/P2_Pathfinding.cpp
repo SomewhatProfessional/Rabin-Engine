@@ -1,6 +1,7 @@
 #include <pch.h>
 #include "P2_Pathfinding.h"
 #include "Projects/ProjectTwo.h"
+#include "SimpleMath.h"
 #include <algorithm>
 
 #pragma region Extra Credit
@@ -169,15 +170,15 @@ void PostProcessing::Rubberbanding(Node* end_node)
 // Returns true if no walls were found.
 bool PostProcessing::CheckForWalls(Node* corner_1, Node* corner_2)
 {
-   int x_min = std::min(corner_1->gridPos.col, corner_2->gridPos.col);
-   int x_max = std::max(corner_1->gridPos.col, corner_2->gridPos.col);
+   int x_min = std::min(corner_1->gridPos.row, corner_2->gridPos.row);
+   int x_max = std::max(corner_1->gridPos.row, corner_2->gridPos.row);
 
-   int y_min = std::min(corner_1->gridPos.row, corner_2->gridPos.row);
-   int y_max = std::max(corner_1->gridPos.row, corner_2->gridPos.row);
+   int y_min = std::min(corner_1->gridPos.col, corner_2->gridPos.col);
+   int y_max = std::max(corner_1->gridPos.col, corner_2->gridPos.col);
 
-   for (int row = y_min; row < y_max; row++)
+   for (int row = x_min; row <= x_max; row++)
    {
-      for (int col = x_min; col < x_max; col++)
+      for (int col = y_min; col <= y_max; col++)
       {
          if (terrain->is_wall(row, col))
             return false;
@@ -186,6 +187,17 @@ bool PostProcessing::CheckForWalls(Node* corner_1, Node* corner_2)
 
    return true;
 }
+
+void PostProcessing::Smoothing(Node* node)
+{
+   // Select the first four points. (first point is doubled up
+   // Use these to generate 3 new points.
+   // Move all four points down the path by 1.
+   // Generate 3 new points.
+   
+   //XMVectorCatmullRom
+}
+
 
 // AStarPather Implementation //
 ////////////////////////////////
@@ -346,10 +358,12 @@ PathResult AStarPather::compute_path(PathRequest& request)
 
       if (parent_node->gridPos == goal)
       {
+         // Post-Processing
+         if(request.settings.rubberBanding)
+            post_proc.Rubberbanding(parent_node);
          // Follow the path back and push it.
          TracePath(parent_node, request.path);
 
-         // Post-Processing
 
 
          return PathResult::COMPLETE;
@@ -402,7 +416,7 @@ PathResult AStarPather::compute_path(PathRequest& request)
                given_cost += 1.0f;
 
             // f(x) = g(x) + h(x)
-            final_cost = given_cost + heuristics.Distance(neighbor_pos, goal, request.settings.heuristic);
+            final_cost = given_cost + (heuristics.Distance(neighbor_pos, goal, request.settings.heuristic) * request.settings.weight);
 
             // If child is not on any list, put it on the open list.
             if ((neighbor->onList == List::None) || (final_cost < neighbor->finalCost))

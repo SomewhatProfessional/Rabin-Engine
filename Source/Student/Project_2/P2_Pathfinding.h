@@ -53,8 +53,7 @@ class PostProcessing
 public:
    void Rubberbanding(Node* end_node);
    bool CheckForWalls(Node* corner_1, Node* corner_2);
-
-   //void CatmullRomSpline();
+   void Smoothing(Node* node);
 };
 
 class AStarPather
