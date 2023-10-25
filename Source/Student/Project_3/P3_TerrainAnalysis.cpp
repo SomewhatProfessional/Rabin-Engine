@@ -23,8 +23,19 @@ float distance_to_closest_wall(int row, int col)
     */
 
     // WRITE YOUR CODE HERE
-    
-    return 0.0f; // REPLACE THIS
+   float smallest = D3D10_FLOAT32_MAX;
+
+   for (int row_ = -1; row_ < 41; row_++)
+   {
+      for (int col_ = -1; col_ < 41; col_++)
+      {
+         float result = sqrt(pow(row_ - row, 2) + pow(col_ - col, 2));
+         if (result < smallest && result != 0)
+            smallest = result;
+      }
+   }
+
+    return smallest; // REPLACE THIS
 }
 
 bool is_clear_path(int row0, int col0, int row1, int col1)
@@ -39,6 +50,7 @@ bool is_clear_path(int row0, int col0, int row1, int col1)
     */
 
     // WRITE YOUR CODE HERE
+   line_intersect(Vec2(row0, col0),);
 
     return false; // REPLACE THIS
 }
