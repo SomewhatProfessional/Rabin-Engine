@@ -12,6 +12,11 @@ bool ProjectThree::implemented_fog_of_war() const // extra credit
     return false;
 }
 
+bool valid_cell_pos(MapLayer<float> & layer, int row, int col)
+{
+   return ( !(row > ( layer.get_width() - 1) ) && !(col > (layer.get_height() - 1)) && !(row < 0) && !(col < 0));
+}
+
 float distance_to_closest_wall(int row, int col)
 {
     /*
@@ -29,7 +34,7 @@ float distance_to_closest_wall(int row, int col)
    {
       for (int col_ = -1; col_ < 41; col_++)
       {
-         float result = sqrt(pow(row_ - row, 2) + pow(col_ - col, 2));
+         float result = static_cast<float>(sqrt(pow(row_ - row, 2) + pow(col_ - col, 2)));
          if (result < smallest && result != 0)
             smallest = result;
       }
@@ -50,7 +55,7 @@ bool is_clear_path(int row0, int col0, int row1, int col1)
     */
 
     // WRITE YOUR CODE HERE
-   line_intersect(Vec2(row0, col0),);
+   //line_intersect(Vec2(row0, col0),);
 
     return false; // REPLACE THIS
 }
@@ -134,8 +139,59 @@ void propagate_solo_occupancy(MapLayer<float> &layer, float decay, float growth)
         After every cell has been processed into the temporary layer, write the temporary layer into
         the given layer;
     */
-    
-    // WRITE YOUR CODE HERE
+
+   float temp_layer[40][40];
+   int width = layer.get_width();
+   int height = layer.get_height();
+
+   // For each cell
+   for (int row = 0; row < width; row++)
+   {
+      for (int col = 0; col < height; col++)
+      {
+         float highest = 0;
+         float value = 0;
+         float distance = 0;
+
+         // For each neighbor of the cell
+         for (int row_offset = -1; row_offset < 2; row_offset++)
+         {
+            for (int col_offset = -1; col_offset < 2; col_offset++)
+            {
+               if (valid_cell_pos(layer, row + row_offset, col + col_offset))
+               {
+                  if (row_offset == col_offset)
+                  {
+                     if (row_offset == 0)
+                        continue;
+                     distance = 1.41f;
+                  }
+                  else
+                     distance = 1.0f;
+
+                  value = layer.get_value(row + row_offset, col + col_offset);
+
+                  value = value * exp(-1 * distance * decay);
+                  //temp_layer[row + row_offset][col + col_offset] = value;
+
+                  if (value > highest)
+                     highest = value;
+               }
+            }
+         }
+
+         float new_value = lerp(layer.get_value(row, col), highest, growth);
+         temp_layer[row][col] = new_value;
+      }
+   }
+
+   for (int row = 0; row < width; row++)
+   {
+      for (int col = 0; col < height; col++)
+      {
+         layer.set_value(row, col, temp_layer[row][col]);
+      }
+   }
 }
 
 void propagate_dual_occupancy(MapLayer<float> &layer, float decay, float growth)

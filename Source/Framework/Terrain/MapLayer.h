@@ -43,6 +43,9 @@ public:
     void toggle_enabled() { enabled = !enabled; }
 
     void for_each(std::function<void(T &)> op);
+
+    int get_height() { return height; }
+    int get_width() { return width; }
 private:
     container data;
     float yHeight;
