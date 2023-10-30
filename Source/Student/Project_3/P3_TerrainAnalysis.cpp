@@ -30,17 +30,29 @@ float distance_to_closest_wall(int row, int col)
     // WRITE YOUR CODE HERE
    float smallest = D3D10_FLOAT32_MAX;
 
+   if (terrain->is_wall(row, col))
+      return 0;
+
    for (int row_ = -1; row_ < 41; row_++)
    {
       for (int col_ = -1; col_ < 41; col_++)
       {
-         float result = static_cast<float>(sqrt(pow(row_ - row, 2) + pow(col_ - col, 2)));
-         if (result < smallest && result != 0)
-            smallest = result;
+         if (terrain->is_valid_grid_position(row_, col_) == false)
+         {
+            float result = static_cast<float>(sqrt(pow(row_ - row, 2) + pow(col_ - col, 2)));
+            if (result < smallest && result != 0)
+               smallest = result;
+         }
+         else if (terrain->is_wall(row_, col_))
+         {
+            float result = static_cast<float>(sqrt(pow(row_ - row, 2) + pow(col_ - col, 2)));
+            if (result < smallest && result != 0)
+               smallest = result;
+         }
       }
    }
 
-    return smallest; // REPLACE THIS
+    return smallest;
 }
 
 bool is_clear_path(int row0, int col0, int row1, int col1)
@@ -54,19 +66,40 @@ bool is_clear_path(int row0, int col0, int row1, int col1)
         function in the global terrain to determine if a cell is a wall or not.
     */
 
-    // WRITE YOUR CODE HERE
-   //line_intersect(Vec2(row0, col0),);
+   int width = terrain->get_map_width();
+   int height = terrain->get_map_height();
+
+   for (int row = 0; row < width; row++)
+   {
+      for (int col = 0; col < height; col++)
+      {
+         if(terrain->is_wall(row, col))
+            line_intersect(Vec2(row0, col0), Vec2(row1, col1), );
+
+      }
+   }
+
 
     return false; // REPLACE THIS
 }
 
-void analyze_openness(MapLayer<float> &layer)
+void analyze_openness(MapLayer<float>& layer)
 {
-    /*
-        Mark every cell in the given layer with the value 1 / (d * d),
-        where d is the distance to the closest wall or edge.  Make use of the
-        distance_to_closest_wall helper function.  Walls should not be marked.
-    */
+   /*
+       Mark every cell in the given layer with the value 1 / (d * d),
+       where d is the distance to the closest wall or edge.  Make use of the
+       distance_to_closest_wall helper function.  Walls should not be marked.
+   */
+   int width = terrain->get_map_width();
+   int height = terrain->get_map_height();
+
+   for (int row = 0; row < width; row++)
+   {
+      for (int col = 0; col < height; col++)
+      {
+         layer.set_value(row, col, (1.0f / static_cast<float>(pow(distance_to_closest_wall(row, col), 2))) );
+      }
+   }
 
     // WRITE YOUR CODE HERE
 }
@@ -141,8 +174,8 @@ void propagate_solo_occupancy(MapLayer<float> &layer, float decay, float growth)
     */
 
    float temp_layer[40][40];
-   int width = layer.get_width();
-   int height = layer.get_height();
+   int width = terrain->get_map_width();
+   int height = terrain->get_map_height();
 
    // For each cell
    for (int row = 0; row < width; row++)
@@ -170,9 +203,7 @@ void propagate_solo_occupancy(MapLayer<float> &layer, float decay, float growth)
                      distance = 1.0f;
 
                   value = layer.get_value(row + row_offset, col + col_offset);
-
                   value = value * exp(-1 * distance * decay);
-                  //temp_layer[row + row_offset][col + col_offset] = value;
 
                   if (value > highest)
                      highest = value;
@@ -211,8 +242,6 @@ void propagate_dual_occupancy(MapLayer<float> &layer, float decay, float growth)
         After every cell has been processed into the temporary layer, write the temporary layer into
         the given layer;
     */
-
-    // WRITE YOUR CODE HERE
 }
 
 void normalize_solo_occupancy(MapLayer<float> &layer)
@@ -223,7 +252,29 @@ void normalize_solo_occupancy(MapLayer<float> &layer)
         range of [0, 1].  Negative values should be left unmodified.
     */
 
-    // WRITE YOUR CODE HERE
+   float highest = 0;
+   int width = terrain->get_map_width();
+   int height = terrain->get_map_height();
+
+   for (int row = 0; row < width; row++)
+   {
+      for (int col = 0; col < height; col++)
+      {
+         float value = layer.get_value(row, col);
+         if (value > highest)
+            highest = value;
+      }
+   }
+
+   for (int row = 0; row < width; row++)
+   {
+      for (int col = 0; col < height; col++)
+      {
+         float value = layer.get_value(row, col);
+         if (value > 0)
+            layer.set_value(row, col, value / highest);
+      }
+   }
 }
 
 void normalize_dual_occupancy(MapLayer<float> &layer)
