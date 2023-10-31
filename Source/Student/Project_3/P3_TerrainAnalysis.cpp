@@ -191,11 +191,9 @@ void analyze_visible_to_cell(MapLayer<float>& layer, int row, int col)
             {
                for (int col_offset = -1; col_offset < 2; col_offset++)
                {
-                  if (terrain->is_valid_grid_position(row + row_offset, col + col_offset))
+                  if (terrain->is_valid_grid_position(row_ + row_offset, col_ + col_offset))
                   {
-                     float val = layer.get_value(row + row_offset, col + col_offset);
-                    // std::cout << val << std::endl;
-                     if (val > 0.6f)
+                     if (layer.get_value(row_ + row_offset, col_ + col_offset) > 0.6f)
                      {
                         layer.set_value(row_, col_, 0.5f);
                         flag = true;
@@ -208,7 +206,6 @@ void analyze_visible_to_cell(MapLayer<float>& layer, int row, int col)
                   break;
             }
          }
-
       }
    }
 }
@@ -415,7 +412,17 @@ void enemy_field_of_view(MapLayer<float>& layer, float fovAngle, float closeDist
        as a fov cone.
    */
 
-   // WRITE YOUR CODE HERE
+   int width = terrain->get_map_width();
+   int height = terrain->get_map_height();
+
+   for (int row = 0; row < width; row++)
+   {
+      for (int col = 0; col < height; col++)
+      {
+         if(layer.get_value(row, col) < 0.0f)
+            layer.set_value(row, col, 0);
+      }
+   }
 }
 
 bool enemy_find_player(MapLayer<float>& layer, AStarAgent* enemy, Agent* player)
