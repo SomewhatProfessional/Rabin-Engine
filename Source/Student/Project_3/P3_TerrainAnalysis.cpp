@@ -76,9 +76,6 @@ bool is_clear_path(int row0, int col0, int row1, int col1)
             Vec2 lower_left  = Vec2(row - omega, col + omega);
             Vec2 lower_right = Vec2(row + omega, col + omega);
 
-            Vec3 bruh1 = terrain->get_world_position(static_cast<int>(row), static_cast<int>(col));
-            Vec3 bruh2 = terrain->get_world_position(static_cast<int>(row + 1), static_cast<int>(col));
-
             if (line_intersect(P0, P1, upper_left, upper_right)
                || line_intersect(P0, P1, upper_right, lower_right)
                || line_intersect(P0, P1, lower_right, lower_left)
@@ -170,7 +167,50 @@ void analyze_visible_to_cell(MapLayer<float>& layer, int row, int col)
        helper function.
    */
 
-   // WRITE YOUR CODE HERE
+   int width = terrain->get_map_width();
+   int height = terrain->get_map_height();
+
+   for (int row_ = 0; row_ < width; row_++)
+   {
+      for (int col_ = 0; col_ < height; col_++)
+      {
+         if (terrain->is_wall(row_, col_))
+            continue;
+
+         if (is_clear_path(row, col, row_, col_))
+         {
+            layer.set_value(row_, col_, 1.0f);
+         }
+         else
+         {
+            layer.set_value(row_, col_, 0.0f);
+            bool flag = false;
+
+            // For each neighbor of the cell
+            for (int row_offset = -1; row_offset < 2; row_offset++)
+            {
+               for (int col_offset = -1; col_offset < 2; col_offset++)
+               {
+                  if (terrain->is_valid_grid_position(row + row_offset, col + col_offset))
+                  {
+                     float val = layer.get_value(row + row_offset, col + col_offset);
+                    // std::cout << val << std::endl;
+                     if (val > 0.6f)
+                     {
+                        layer.set_value(row_, col_, 0.5f);
+                        flag = true;
+                        break;
+                     }
+
+                  }
+               }
+               if (flag)
+                  break;
+            }
+         }
+
+      }
+   }
 }
 
 void analyze_agent_vision(MapLayer<float>& layer, const Agent* agent)
@@ -193,7 +233,35 @@ void analyze_agent_vision(MapLayer<float>& layer, const Agent* agent)
        helper function.
    */
 
-   // WRITE YOUR CODE HERE
+   int width = terrain->get_map_width();
+   int height = terrain->get_map_height();
+
+   GridPos pos = terrain->get_grid_position(agent->get_position());
+
+   Vec2 agent_view_vec;
+   agent_view_vec.x = agent->get_forward_vector().x;
+   agent_view_vec.y = agent->get_forward_vector().z;
+
+   agent_view_vec.Normalize();
+
+   for (int row = 0; row < width; row++)
+   {
+      for (int col = 0; col < height; col++)
+      {
+         Vec2 agent_to_cell_vec;
+         agent_to_cell_vec.x = static_cast<float>(row - pos.row);
+         agent_to_cell_vec.y = static_cast<float>(col - pos.col);
+         agent_to_cell_vec.Normalize();
+
+         float dot_product = agent_view_vec.x * agent_to_cell_vec.x + agent_view_vec.y * agent_to_cell_vec.y;
+         float angle = dot_product / 1;
+
+         if (dot_product > -0.01f && is_clear_path(row, col, pos.row, pos.col))
+         {
+            layer.set_value(row, col, 1.0f);
+         }
+      }
+   }
 }
 
 void propagate_solo_occupancy(MapLayer<float>& layer, float decay, float growth)
