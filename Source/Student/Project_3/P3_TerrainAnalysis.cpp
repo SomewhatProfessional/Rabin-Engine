@@ -507,7 +507,54 @@ bool enemy_seek_player(MapLayer<float>& layer, AStarAgent* enemy)
        Return whether a target cell was found.
    */
 
-   // WRITE YOUR CODE HERE
+   float highest_value = 0.0f;
+   GridPos cell_pos;
+   GridPos enemy_pos = terrain->get_grid_position(enemy->get_position());
 
-   return false; // REPLACE THIS
+   int width = terrain->get_map_width();
+   int height = terrain->get_map_height();
+
+   for (int row = 0; row < width; row++)
+   {
+      for (int col = 0; col < height; col++)
+      {
+         float value = layer.get_value(row, col);
+
+         if (value != 0.0f && !terrain->is_wall(row, col))
+         {
+            if (value > highest_value)
+            {
+               highest_value = value;
+               cell_pos.row = row;
+               cell_pos.col = col;
+            }
+            else if (value == highest_value)
+            {
+               float old_distance = Vec2::DistanceSquared(Vec2(static_cast<float>(cell_pos.row), static_cast<float>(cell_pos.col)), Vec2(static_cast<float>(enemy_pos.row), static_cast<float>(enemy_pos.col)));
+               float new_distance = Vec2::DistanceSquared(Vec2(static_cast<float>(row), static_cast<float>(col)), Vec2(static_cast<float>(enemy_pos.row), static_cast<float>(enemy_pos.col)));
+               if (new_distance < old_distance)
+               {
+                  highest_value = value;
+                  cell_pos.row = row;
+                  cell_pos.col = col;
+               }
+            }
+         }
+      }
+   }
+
+   // Loop through all cells
+   // If this cell is higher than the previous highest
+      // Set the previous highest to this ones value.
+      // Calculate the distance
+   // If this cell is equal to the highest and not 0
+      // Calculate the distance, if it is less than the previous, then choose this cell.
+
+   if (highest_value > 0.0f)
+   {
+      enemy->path_to(terrain->get_world_position(cell_pos));
+      return true;
+   }
+
+   return false;
 }
