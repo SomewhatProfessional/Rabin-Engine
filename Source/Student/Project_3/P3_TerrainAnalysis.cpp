@@ -22,7 +22,6 @@ float distance_to_closest_wall(int row, int col)
        and a wall, respectively.
    */
 
-   // WRITE YOUR CODE HERE
    float smallest = D3D10_FLOAT32_MAX;
 
    for (int row_ = -1; row_ < 41; row_++)
@@ -547,13 +546,6 @@ bool enemy_seek_player(MapLayer<float>& layer, AStarAgent* enemy)
          }
       }
    }
-
-   // Loop through all cells
-   // If this cell is higher than the previous highest
-      // Set the previous highest to this ones value.
-      // Calculate the distance
-   // If this cell is equal to the highest and not 0
-      // Calculate the distance, if it is less than the previous, then choose this cell.
 
    if (highest_value > 0.0f)
    {
