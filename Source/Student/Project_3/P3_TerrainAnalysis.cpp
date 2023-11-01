@@ -83,8 +83,6 @@ bool is_clear_path(int row0, int col0, int row1, int col1)
             {
                return false;
             }
-
-
          }
 
       }
@@ -415,12 +413,59 @@ void enemy_field_of_view(MapLayer<float>& layer, float fovAngle, float closeDist
    int width = terrain->get_map_width();
    int height = terrain->get_map_height();
 
+   // Clear map layer.
    for (int row = 0; row < width; row++)
    {
       for (int col = 0; col < height; col++)
       {
          if(layer.get_value(row, col) < 0.0f)
             layer.set_value(row, col, 0);
+      }
+   }
+
+   Vec2 pos;
+   pos.x = enemy->get_position().x;
+   pos.y = enemy->get_position().z;
+
+   GridPos pos_grid = terrain->get_grid_position(enemy->get_position());
+
+   Vec2 enemy_view_vec;
+   enemy_view_vec.x = enemy->get_forward_vector().x;
+   enemy_view_vec.y = enemy->get_forward_vector().z;
+
+   for (int row = 0; row < width; row++)
+   {
+      for (int col = 0; col < height; col++)
+      {
+         if (terrain->is_wall(row, col))
+            continue;
+
+         Vec2 tile_pos;
+         tile_pos.x = terrain->get_world_position(row, col).x;
+         tile_pos.y = terrain->get_world_position(row, col).y;
+
+         // If tile is close enough or within the view cone.
+         if (Vec2::DistanceSquared(Vec2(static_cast<float>(pos_grid.row), static_cast<float>(pos_grid.col)), Vec2(static_cast<float>(row), static_cast<float>(col))) <= closeDistance)
+         {
+            if(is_clear_path(pos_grid.row, pos_grid.col, row, col))
+               layer.set_value(row, col, occupancyValue);
+         }  
+         else
+         {
+            enemy_view_vec.Normalize();
+
+            Vec2 enemy_to_cell_vec;
+            enemy_to_cell_vec.x = static_cast<float>(row - pos_grid.row);
+            enemy_to_cell_vec.y = static_cast<float>(col - pos_grid.col);
+            enemy_to_cell_vec.Normalize();
+
+            float dot_product = enemy_view_vec.x * enemy_to_cell_vec.x + enemy_view_vec.y * enemy_to_cell_vec.y;
+
+            if (dot_product >= (1 - fovAngle / 180.0f) && is_clear_path(row, col, pos_grid.row, pos_grid.col))
+            {
+               layer.set_value(row, col, occupancyValue);
+            }
+         }
       }
    }
 }
