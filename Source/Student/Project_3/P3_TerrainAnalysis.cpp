@@ -284,6 +284,11 @@ void propagate_solo_occupancy(MapLayer<float>& layer, float decay, float growth)
    {
       for (int col = 0; col < height; col++)
       {
+         if (terrain->is_wall(row, col))
+         {
+            temp_layer[row][col] = 0.0f;
+            continue;
+         }
          float highest = 0;
          float value = 0;
          float distance = 0;
